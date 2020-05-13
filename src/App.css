@@ -1,38 +1,164 @@
-.App {
+@import url("https://fonts.googleapis.com/css2?family=Merriweather&display=swap");
+/* Simple browser reset */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+
+header {
+  background: #d1e0e0;
+  color: #fff;
+  padding: 10px 30px;
+} 
+
+footer {
+  background: #222;
+  padding: 40px;
   text-align: center;
+  color: #d8d8d8;
+  margin-top: 20px;
+
+  bottom: 0; 
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+nav {
+  width: 50%;
+  display: inline-block; 
+  text-align: center; 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+nav ul {
+  list-style: none;
+  margin: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+nav ul li {
+  display: inline-block;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 10px 15px; 
+  border-radius: 3px; 
+  transition: 0.3s ease all;  /* smooth transition */ 
+}
+
+#login {
+  text-align: right;
+  width: 30%;
+}
+
+nav ul li a:hover {
+  background: #444;
+}
+
+/* Main part of page */
+
+h2 {
+  font-family: "Merriweather", serif;
+  font-size: 30px;
+}
+
+button {
+  margin-bottom: 2%;
+}
+
+form {
+  margin-bottom: 1%;
+}
+
+.hero__title {
+  font-size: 50px; 
+  margin: 0; 
+  font-family: "Merriweather", serif;
+}
+
+.hero__subtitle {
+  font-size: 25px; 
+  color: #000;
+}
+
+.hero {
+  margin: 10px;
+  text-align: center; 
+}
+
+.hero__content a {
+  display: inline-block; 
+  color: #000; 
+  border: 3px solid #000;
+  border-radius: 3px;
+  padding: 15px 30px; 
+  margin-right: 20px; 
+  text-decoration: none;
+  font-size: 28px;
+  transition: transform 1s; 
+}
+
+.hero__content a:hover {
+  background: #A97B71;
+}
+
+.ag-header-cell-label {
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+
+
+/* Adjust to different screen sizes*/
+@media (max-width: 700px) {
+  .features__box-wrapper {
+    flex-wrap: wrap;
+  }
+  .features__box {
+    flex: 1 100%;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+/* Icon */
+#icon {
+  display: inline-block;
+  color: #fff;
+  width: 20%;
+}
+
+#icon img {
+  width: 50px;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Basic site section */
+.features {
+  padding-bottom: 50px;
+  padding-top: 50px;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features__header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.features__header h2 {
+  font-size: 30px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: #777;
 }
