@@ -4,6 +4,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 
 
+// search bar to search for an industry
 function SearchBar(props) {
   const [innerSearch, setInnerSearch] = useState("");
   return (
@@ -25,7 +26,7 @@ function SearchBar(props) {
   )
 }
 
-
+// query to the API
 function getAPI(search) {
 
   let url
@@ -40,6 +41,8 @@ function getAPI(search) {
     
 }
 
+
+// save data from the response from the API
 function useStockAPI(search) {
   const [rowData, setRowData] = useState([]);
   const [errorPage, setErrorPage] = useState("initial");
@@ -82,16 +85,38 @@ export default function Stocks() {
     { headerName: "Industry", field: "industry", sortable: true, filter: true}
   ];
  
+
+// unsuccessful search
  if (errorPage !== "initial") {
    
-  return <p> 
-    Error: {errorPage}. 
-    Please press search to go back to the table, or search for a new industry in the search bar.
-    <SearchBar
-      onSubmit={setSearch} />
-     </p>
+  return (
+     <center>
+     <div>
+       <h2> Stocks </h2>
+       <p> Here are all stocks displayed. If you want to look at a particular industry, use the search bar below.</p>
+         <SearchBar
+         onSubmit={setSearch} />
+      <p>{errorPage}</p>
+     <div
+     className="ag-theme-balham-dark"
+     style={{
+       height: "700px", 
+       width: "600px",
+     }}
+     >
+       <AgGridReact
+       columnDefs={columns}
+       rowData={rowData} 
+       pagination={true}
+       paginationPageSize={20} />
+     </div>
+ 
+     </div>
+     </center>
+  )
 } 
 
+  //successful search
   return (
     <center>
     <div>

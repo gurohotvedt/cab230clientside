@@ -12,7 +12,7 @@ export default function Header() {
         <div id="icon">
             <Link to="/"> <img src="img/test.jpg" alt="Icon"></img></Link>
         </div>
-       <Nav />
+       <Nav /> 
        <LoginNav />
     </header>
      

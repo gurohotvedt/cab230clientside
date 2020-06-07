@@ -3,13 +3,15 @@ import React, { useState, useEffect } from "react";
 import {AgGridReact} from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham-dark.css";
-import {Chart} from 'chart.js';
 import {Line} from 'react-chartjs-2';
+import {Link} from "react-router-dom";
 
 const API_URL="http://131.181.190.87:3000"
 
+
+// search bar to search for a specific stock
 function SearchBar(props) {
-  const [innerSearch, setInnerSearch] = useState("");
+  const [innerSearch, setInnerSearch] = useState(""); //input typed in the form is saved in innerSearch
   return (
     <div>
         <input
@@ -22,13 +24,13 @@ function SearchBar(props) {
         <button 
         type="button" 
         id="search-button"
-        onClick={() => props.onSubmit(innerSearch)}
+        onClick={() => props.onSubmit(innerSearch)}  //the value saved in innerSearch is used as the search term to the API
         > Search</button>
     </div>
   )
 }
 
-
+// date pickers to choose to- and from-dates for a specific stock
 function PickDate(props) {
 
   return (
@@ -52,11 +54,12 @@ function PickDate(props) {
   )
 } 
 
+// query to the API
 function getAPI(search, fromDate, toDate) {
 
   let url;
   if (search === "") {
-    url = `${API_URL}/stocks/authed/A?from=${fromDate}&to=${toDate}`  //If the search for a stock ends up in an error, one can simply just press search to go back to the initial page. 
+    url = `${API_URL}/stocks/authed/A?from=${fromDate}&to=${toDate}` // default page when entering and when the search bar is empty 
     
   }
   else {
@@ -79,11 +82,15 @@ function getAPI(search, fromDate, toDate) {
     
 }
 
+// save data from the response from the API
 function useStockAPI(search, fromDate, toDate) {
   const [rowData, setRowData] = useState([]);
   const [errorPage, setErrorPage] = useState("initial");
-  const [highestPrice, setHighestPrice] = useState();
-  const [timestamps, setTimestamps] = useState();
+  const [closingPrice, setClosingPrice] = useState([]);
+  const [timestamps, setTimestamps] = useState([]);
+  let valuetest;
+  let labeltest;
+
 
 
   useEffect(() => {
@@ -95,17 +102,15 @@ function useStockAPI(search, fromDate, toDate) {
       }
       else {
         setRowData(data)
-        setHighestPrice(data.map(element => element.high))
+        setClosingPrice(data.map(element => element.close))
         setTimestamps(data.map(element => element.timestamp))
-        console.log(highestPrice)
-        console.log(timestamps)
       }
     }
       )
   }, [search, fromDate, toDate]);
 
   return {
-    rowData, errorPage, highestPrice, timestamps
+    rowData, errorPage, timestamps, closingPrice
   }
 }
 
@@ -114,9 +119,10 @@ export default function PriceHistory() {
   const [search, setSearch] = useState("A");
   const [fromDate, setFromDate] = useState("2020-03-15");
   const [toDate, setToDate] = useState("2020-03-31");
-  const [chartData, setChartData] = useState({})
+  const [chartData, setChartData] = useState({});
 
-  const { rowData, errorPage, highestPrice, timestamps } = useStockAPI(search, fromDate, toDate);
+
+  const { rowData, errorPage, timestamps, closingPrice } = useStockAPI(search, fromDate, toDate);
 
   
   const columns = [
@@ -129,13 +135,14 @@ export default function PriceHistory() {
     { headerName: "Volumes", field: "volumes", sortable: true }
   ];
 
+  //chart for showing closing prices of the time period
   const chart = () => {
     setChartData({
-      labels: timestamps,  // should be an array
+      labels: timestamps, 
       datasets: [
         {
-          label:'Highest price',   // should be an array 
-          data: highestPrice,
+          label:'Closing price',   
+          data: closingPrice,
           backgroundColor: [
             'rgba(75, 192, 192, 0.6)'
           ],
@@ -147,20 +154,42 @@ export default function PriceHistory() {
 
   useEffect(() => {
     chart()
-  }, [] )
-    
+  }, [closingPrice, timestamps] )
+
+
+  // user tries to access page without being logged in
+  if(errorPage === "jwt malformed") {
+    return (
+      <center>
+      <p>You cannot access this page without being logged in. Please go to the
+        <Link to="/login"> Login</Link> page and log in with your user  account.</p>
+      </center>
+    )
+  }
   
 
+  //unsuccessful search
   if (errorPage !== "initial") {
-    // setFromDate("2020-03-15")  //Hvorfor funker ikke dette?
-    // setToDate("2020-03-31")
-    return <p> 
-      Error: {errorPage}.
+    return (
+
+    <center>
+    <div>
+      <h2>Price History</h2>
+      <p> Here can you specify a specific stock and look at the history from a specific time period.</p>
+      
+
+      <PickDate fromDate={fromDate} setFromDate={setFromDate} toDate={toDate} setToDate={setToDate}/>
+      
       <SearchBar
         onSubmit={setSearch} />
-       </p>
+        <p>{errorPage}.</p> 
+
+    </div>
+    </center>
+    )
   } 
 
+  //successful search
   return (
     <center>
     <div>
@@ -181,12 +210,15 @@ export default function PriceHistory() {
     >
       <AgGridReact
       columnDefs={columns}
-      rowData={rowData} 
+      rowData={rowData}
+      pagination={true}
+      paginationPageSize={8}
       />
 
     </div>
     <div>
-      <Line data={chartData}/>
+      <p>Chart of the closing price over the specificed dates for the specificed stock:</p>
+      <Line data={chartData} width={100} height={300} options={{ maintainAspectRatio: false }} />
     </div>
 
     </div>

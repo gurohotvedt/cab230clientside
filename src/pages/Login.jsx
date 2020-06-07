@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import jwt from "jsonwebtoken";
+import React, { useState } from "react"
 
 const API_URL="http://131.181.190.87:3000"
 
@@ -26,14 +25,14 @@ export default function Login() {
         setErrorPage(res.message)
       }
       else {
-        localStorage.setItem("token", res.token)
-        console.log(res) //fjern denne før levering
+        localStorage.setItem("token", res.token)   // save token in LocalStorage
         setSuccessPage("Login successful!")
-        window.location.reload();
+        window.location.reload();  // must reload page to be able to see "Logout" in the navigation bar.
       }
     })
   }
 
+  // login successful
   if (successPage !== "" ) {
     return (
       <center>
@@ -44,6 +43,7 @@ export default function Login() {
     )
   }
 
+  // login unsuccessful
   if (errorPage !== "") {
     return (
       <center>
@@ -81,6 +81,8 @@ export default function Login() {
     )
   }
 
+
+  // page that shows when a user enters the page
   return (
     <center>
     <div>

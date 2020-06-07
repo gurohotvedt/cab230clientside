@@ -9,8 +9,8 @@ export default function Register() {
   const [successPage, setSuccessPage] = useState("");
   
   function register () {
-    setEmail("")
-    setPassword("")
+    setEmail("")   // set to an empty string to allow several attempts to register
+    setPassword("") // set to an empty string to allow several attempts to register
     const url = `${API_URL}/user/register`
 
     return fetch(url, {
@@ -30,6 +30,7 @@ export default function Register() {
 
   }
 
+  // successful attempt to register
   if (successPage !== "") {
     return (
       <center>
@@ -39,6 +40,7 @@ export default function Register() {
     
   }
 
+  // unsuccessful attempt to register
   if (errorPage !== "") {
     return (
     
@@ -74,7 +76,9 @@ export default function Register() {
     </center>
     )
     }
-    
+
+
+// the page that is shown when the user enters the page    
 return (
       <center>
     <div>

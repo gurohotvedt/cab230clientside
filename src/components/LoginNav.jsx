@@ -2,15 +2,17 @@ import React from "react";
 import {Link, Redirect} from "react-router-dom";
 
 
+
+// logout function
 function Logout() {
   localStorage.removeItem("token");
-  window.location.reload();
-  // <Redirect to="/login" />  //Tried to redirect something here
+  window.location.reload();  // must reload page when log in to display the logout link
 }
 
-// navigation links
+// navigation links for (login and register)/logout
 export default function LoginNav() {
 
+  // if logged in
   if ("token" in localStorage) {
     return (
       <nav id="login">

@@ -4,6 +4,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 
 
+// search bar to search for a specific symbol
 function SearchBar(props) {
   const [innerSearch, setInnerSearch] = useState("");
   return (
@@ -29,14 +30,12 @@ function SearchBar(props) {
 
 export default function Quote() {
   const [rowData, setRowData] = useState([]);
-  const [search, setSearch] = useState("A");  //Displays stock with symbol "A" as a preview
+  const [search, setSearch] = useState("A");  //Displays stock with symbol "A" as default
   const [errorPage, setErrorPage] = useState("initial");
   
   const columns = [
     { headerName: "Timestamp", field: "timestamp", resizable: true},
-    { headerName: "Symbol", field: "symbol", resizable: true },
-    //{ headerName: "Name", field: "name"}, 
-   // { headerName: "Industry", field: "industry"}, 
+    { headerName: "Symbol", field: "symbol", resizable: true }, 
     { headerName: "Open", field: "open"}, 
     { headerName: "High", field: "high" },
     { headerName: "Low", field: "low"},
@@ -44,7 +43,7 @@ export default function Quote() {
     { headerName: "Volumes", field: "volumes"}
   ];
     
-  useEffect(() => {     // should maybe have this fetch in a separate function. 
+  useEffect(() => {    
     setErrorPage("initial");
     fetch(`http://131.181.190.87:3000/stocks/${search}`)
     .then ( res => res.json())
@@ -55,17 +54,40 @@ export default function Quote() {
         setRowData([data])
       } 
     })
-    // .then(stocks => setRowData([stocks]))
   }, [search]);
 
+
+  //unsuccessful search
   if (errorPage !== "initial") {
-    return <p> 
-      Error: {errorPage}. Please search for a new stock by symbol in the search bar.
-      <SearchBar
-        onSubmit={setSearch} />
-       </p>
+    return (
+       <center>
+       <div>
+         <h2>Quote</h2>
+         <p>A specific stock in detail is displayed. For looking up a specific stock, use the search bar below.</p>
+   
+         <SearchBar
+           onSubmit={setSearch} />
+          <p>{errorPage}</p>
+       <div
+       className="ag-theme-balham-dark"
+       style={{
+         height: "100px", 
+         width: "1405px", 
+       }}
+       >
+         <AgGridReact
+         columnDefs={columns}
+         rowData={rowData}
+         />
+   
+       </div>
+       </div>
+       </center>
+    )
   } 
 
+
+  //successful search
   return (
     <center>
     <div>
